@@ -3,5 +3,5 @@ class AppUrls{
   static String BASE_URL = "boonbac.com";
 
   static String LOGIN_URL = "/api/login";
-  static String SIGNUP_URL = "/api/auth";
+  static String CREATE_ACCOUNT_URL = "/api/auth";
 }

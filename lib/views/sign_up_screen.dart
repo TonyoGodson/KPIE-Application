@@ -97,6 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: CustomReusableTextField(
                         controller: _emailController,
+                        maxLength: 40,
                         fillColor: ColorUtils.KPIE_DARK_WHITE.withOpacity(.65),
                         filled: true,
                         borderColor: ColorUtils.TRANSPARENT_,
@@ -107,6 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         label: StringUtils.emailLabel,
                         hint: StringUtils.emailLabel,
                         labelColor: ColorUtils.TEXT_GREY.withOpacity(.75),
+                        validator: (value) => emailValidator(value),
                       ),
                     ),
                     // Padding(
@@ -118,6 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       builder: (context, value, child) {
                         return CustomReusableTextField(
                           controller: _passwordController,
+                          maxLength: 40,
                           fillColor: ColorUtils.KPIE_DARK_WHITE.withOpacity(.65),
                           filled: true,
                           passwordField: _hidePassword.value,
@@ -138,6 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               size: 16,
                             )),
                           ),
+                          validator: (value) => passwordValidator(value),
                         );
                       }),
                     CustomReusableTextField(
@@ -181,6 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
+                        validator: (value) => phoneNumberValidator(value),
                       ),
                     SizedBox(height: 20,),
                     CustomReusableButton(
@@ -191,7 +196,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderRadius: 12,
                         left: 18, right: 18,
                         function: (){
-                          Navigator.of(context).pushNamed(LoginScreen.routeName);
+                          _submit(context);
+                          // Navigator.of(context).pushNamed(LoginScreen.routeName);
                         }),
                     SizedBox(height: 10,),
                     CustomReusableButton(
@@ -218,31 +224,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if(formKey.currentState!.validate()){
       Map<String, dynamic> data = {
         "email": _emailController.text.trim(),
-        "phoneNumber": "+234"+_phoneNumberController.text.trim(),
+        "phone_num": formatPhoneNumber(_phoneNumberController.text.trim(), phCode),//phCode+_phoneNumberController.text.trim(),
         "password": _passwordController.text.trim(),
         "server_key": "3fac1bb71fd9088c8365d8fc9bfa546544a903ea-c7ad5ccda5d17029ba77a0aa60c550c4-15271686",
         "username":"username",
         "confirm_password": "confirmpassword",
-        "phone_num":_phoneNumberController.text,
         "gender": "female",
         "first_name": "first name",
         "last_name": "last name",
       };
-      bool done = await ApiHandler.createAccount(context, data);
-      if(done){
-        // _firstnameController.clear();
-        // _lastnameController.clear();
-        // _emailController.clear();
-        // _phoneNumberController.clear();
-        // _passwordController.clear();
-        // _confirmPasswordController.clear();
-        // Navigator.of(context).pushNamed(NavScreen.routeName,
-        //   arguments: 0
-        // );
-      }
+      print('CREATE ACCOUNT REQUEST $data');
+      // bool done = await ApiHandler.createAccount(context, data);
+      // if(done){
+      //   // _firstnameController.clear();
+      //   // _lastnameController.clear();
+      //   // _emailController.clear();
+      //   // _phoneNumberController.clear();
+      //   // _passwordController.clear();
+      //   // _confirmPasswordController.clear();
+      //   // Navigator.of(context).pushNamed(NavScreen.routeName,
+      //   //   arguments: 0
+      //   // );
+      // }
     }
   }
-  
+  String formatPhoneNumber(String phoneNumber, String countryCode) {
+    if (phoneNumber.startsWith('0') && phCode == StringUtils.ngCode) {
+      return '$countryCode' + phoneNumber.substring(1); // Remove leading 0 and prepend country code
+    }
+    return '$countryCode$phoneNumber'; // Prepend country code if no leading 0
+  }
   phoneCodeBottomsheet(){
     showModalBottomSheet(
       context: context,
@@ -338,7 +349,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               setState(() {
                 flagText = eachItem["flag"];
                 phCode = eachItem["code"];
-              });
+                print(" phCode $phCode");
+                    });
               Navigator.pop(context);
               },
               icon: ListTile(

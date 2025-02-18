@@ -11,6 +11,7 @@ import '../core/utils/helper.dart';
 import '../model/data/create_account_response.dart';
 import '../model/data/network/app_urls.dart';
 import '../model/data/user_login_response.dart';
+import '../shared/reusable_dialogs.dart';
 import '../views/login_screen.dart';
 class ApiHandler{
   static Future<bool> loginToApp(BuildContext context, Map<String, dynamic> loginRequest) async {
@@ -49,13 +50,13 @@ class ApiHandler{
     return false;
   }
 
-  static Future<bool> createAccount(BuildContext context, Map<String, dynamic> signUpRequest) async {
+  static Future<bool> createAccount(BuildContext context, Map<String, dynamic> createAccountRequest) async {
     showLoadingDialog(context, "Creating Account");
     try {
-      var uri = Uri.https(AppUrls.BASE_URL, AppUrls.SIGNUP_URL);
+      var uri = Uri.https(AppUrls.BASE_URL, AppUrls.CREATE_ACCOUNT_URL);
       var response = await http.post(uri,
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(signUpRequest));
+          body: jsonEncode(createAccountRequest));
       debugPrint('response ${jsonDecode(response.body)}');
       if(response.statusCode == 200) {
         // context.read<CreateAccountController>().signUpResponse = CreateAccountResponse.fromJson(jsonDecode(response.body));
@@ -90,6 +91,4 @@ class ApiHandler{
     }
     return false;
   }
-
-  static void showLoadingDialog(BuildContext context, String s) {}
 }
