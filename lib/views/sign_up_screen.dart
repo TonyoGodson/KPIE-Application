@@ -26,6 +26,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final  ValueNotifier<bool> _hidePassword = ValueNotifier<bool >(false);
   final formKey = GlobalKey<FormState>();
 
+  String flagText = StringUtils.ngflag;
+  String phCode = StringUtils.ngCode;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -106,66 +109,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         labelColor: ColorUtils.TEXT_GREY.withOpacity(.75),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 18.0),
-                      child: CustomReusableTextField(
-                        controller: _passwordController,
-                        fillColor: ColorUtils.KPIE_DARK_WHITE.withOpacity(.65),
-                        filled: true,
-                        borderColor: ColorUtils.TRANSPARENT_,
-                        focusedBorderColor: ColorUtils.TRANSPARENT_,
-                        leftMargin: 0,
-                        rightMargin: 0,
-                        keyboardType: TextInputType.text,
-                        label: StringUtils.passwordLabel,
-                        hint: StringUtils.passwordLabel,
-                        labelColor: ColorUtils.TEXT_GREY.withOpacity(.75),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 18.0),
+                    //   child:
+                    // ),
                     ValueListenableBuilder(
                       valueListenable: _hidePassword,
                       builder: (context, value, child) {
                         return CustomReusableTextField(
-                          controller: _phoneNumberController,
+                          controller: _passwordController,
                           fillColor: ColorUtils.KPIE_DARK_WHITE.withOpacity(.65),
                           filled: true,
+                          passwordField: _hidePassword.value,
                           borderColor: ColorUtils.TRANSPARENT_,
                           focusedBorderColor: ColorUtils.TRANSPARENT_,
                           leftMargin: 18,
                           rightMargin: 18,
-                          keyboardType: TextInputType.number,
-                          label: StringUtils.phoneLabel,
-                          hint: StringUtils.phoneLabel,
+                          keyboardType: TextInputType.text,
+                          label: StringUtils.passwordLabel,
+                          hint: StringUtils.passwordLabel,
                           labelColor: ColorUtils.TEXT_GREY.withOpacity(.75),
-                          prefIcon: IconButton(
-                            onPressed: (){
-                              print('bottom');
-                                phoneCodeBottomsheet();
-                            },
-                            icon: Container(
-                              width: 45,
-                              height: 25,
-                              margin: EdgeInsets.only(left: 15, top: 10.0, right: 15, bottom: 10.0),
-                              decoration: BoxDecoration(
-                                // color: Colors.red,
-                                  border: Border(
-                                      right: BorderSide(
-                                          width: 1.5,
-                                          color: ColorUtils.TEXT_GREY
-                                      )
-                                  )
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(StringUtils.ngflag),
-                                  Icon(Icons.keyboard_arrow_down,
-                                    size: 18,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
                           sufIcon: SizedBox(
                             width: 10,
                             child: IconButton(
@@ -177,6 +140,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         );
                       }),
+                    CustomReusableTextField(
+                        controller: _phoneNumberController,
+                        fillColor: ColorUtils.KPIE_DARK_WHITE.withOpacity(.65),
+                        filled: true,
+                        borderColor: ColorUtils.TRANSPARENT_,
+                        focusedBorderColor: ColorUtils.TRANSPARENT_,
+                        leftMargin: 18,
+                        rightMargin: 18,
+                        keyboardType: TextInputType.number,
+                        label: StringUtils.phoneLabel,
+                        hint: StringUtils.phoneLabel,
+                        labelColor: ColorUtils.TEXT_GREY.withOpacity(.75),
+                        prefIcon: IconButton(
+                          onPressed: (){
+                            print('bottom');
+                            phoneCodeBottomsheet();
+                          },
+                          icon: Container(
+                            width: 45,
+                            height: 25,
+                            margin: EdgeInsets.only(left: 15, top: 10.0, right: 15, bottom: 10.0),
+                            decoration: BoxDecoration(
+                              // color: Colors.red,
+                                border: Border(
+                                    right: BorderSide(
+                                        width: 1.5,
+                                        color: ColorUtils.TEXT_GREY
+                                    )
+                                )
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(flagText),
+                                Icon(Icons.keyboard_arrow_down,
+                                  size: 18,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     SizedBox(height: 20,),
                     CustomReusableButton(
                         buttonTitle: StringUtils.next,
@@ -329,7 +334,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 borderRadius: BorderRadius.circular(0)
               )
             ),
-              onPressed: (){},
+              onPressed: (){
+              setState(() {
+                flagText = eachItem["flag"];
+                phCode = eachItem["code"];
+              });
+              Navigator.pop(context);
+              },
               icon: ListTile(
             leading: Text(eachItem["flag"],
               style: specialText(
@@ -354,5 +365,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
     });
   }
-
 }
