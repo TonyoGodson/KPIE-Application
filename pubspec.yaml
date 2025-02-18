@@ -38,8 +38,9 @@ dependencies:
   flutter_svg:
   provider: ^6.1.1
   flutter_feather_icons:
-#  http: ^1.3.0
+  shared_preferences:
   intl:
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
